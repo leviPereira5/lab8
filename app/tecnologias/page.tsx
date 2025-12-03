@@ -1,25 +1,31 @@
-import tecnologias from '@/app/data/tecnologias.json';
+import TecnologiaCard from "../components/TecnologiaCard";
+import tecnologias from "../data/tecnologias.json";
 
-export default function Page() {
-  const lista = JSON.parse(JSON.stringify(tecnologias));
+interface Tecnologia {
+  title: string;
+  image: string;
+  description: string;
+  rating: number;
+}
 
+export default function TecnologiasPage() {
   return (
-    <>
-      <h2>Tecnologias Exploradas</h2>
+    <main className="p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        Tecnologias
+      </h1>
 
-      {lista.map((tec: any, i: number) => (
-        <div key={i}>
-          <h3>{tec.title}</h3>
-          <img 
-            src={`/tecnologias/${tec.image}`} 
-            alt={tec.title} 
-            width={80} 
-            height={80} 
-          />
-          <p>{tec.description}</p>
-          <p>Rating: {tec.rating}</p>
-        </div>
-      ))}
-    </>
+      <div className="flex flex-wrap">
+        {(tecnologias as Tecnologia[]).map(
+          (tec: Tecnologia, index: number) => (
+            <TecnologiaCard
+              key={index}
+              title={tec.title}
+              image={tec.image}
+            />
+          )
+        )}
+      </div>
+    </main>
   );
 }
