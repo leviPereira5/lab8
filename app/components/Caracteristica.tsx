@@ -22,9 +22,7 @@ export default function Caracteristica({ nome, descricao }: CaracteristicaProps)
       <Link
         href={`/caracteristicas/${nome}`}
         className="text-blue-400 underline mt-2"
-      >
-        Ver detalhes
-      </Link>
+      > Ver detalhes</Link>
     </div>
   );
 }
