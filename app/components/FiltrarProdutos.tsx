@@ -16,7 +16,8 @@ export default function FiltrarProdutos({
 }: FiltrarProdutosProps) {
   const [pesquisa, setPesquisa] = useState("");
   const [ordenacao, setOrdenacao] = useState("nome-asc");
-  const [produtosFiltrados, setProdutosFiltrados] = useState<Product[]>(data);
+  const [produtosFiltrados, setProdutosFiltrados] =
+    useState<Product[]>(data);
 
   useEffect(() => {
     let resultado = [...data].filter((produto) =>
@@ -42,26 +43,36 @@ export default function FiltrarProdutos({
   }, [pesquisa, ordenacao, data]);
 
   return (
-    <div>
-      <PesquisarProdutos pesquisa={pesquisa} setPesquisa={setPesquisa} />
-
-      <select
-        value={ordenacao}
-        onChange={(e) => setOrdenacao(e.target.value)}
-      >
-        <option value="nome-asc">Nome (A–Z)</option>
-        <option value="nome-desc">Nome (Z–A)</option>
-        <option value="preco-asc">Preço ↑</option>
-        <option value="preco-desc">Preço ↓</option>
-      </select>
-
-      {produtosFiltrados.map((produto) => (
-        <ProdutoCard
-          key={produto.id}
-          produto={produto}
-          onAdd={addToCart}
+    <div className="space-y-6">
+      {/* PESQUISA + ORDENAÇÃO */}
+      <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <PesquisarProdutos
+          pesquisa={pesquisa}
+          setPesquisa={setPesquisa}
         />
-      ))}
+
+        <select
+          value={ordenacao}
+          onChange={(e) => setOrdenacao(e.target.value)}
+          className="border rounded px-3 py-2"
+        >
+          <option value="nome-asc">Nome (A–Z)</option>
+          <option value="nome-desc">Nome (Z–A)</option>
+          <option value="preco-asc">Preço ↑</option>
+          <option value="preco-desc">Preço ↓</option>
+        </select>
+      </div>
+
+      {/* GRID DE PRODUTOS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {produtosFiltrados.map((produto) => (
+          <ProdutoCard
+            key={produto.id}
+            produto={produto}
+            onAdd={addToCart}
+          />
+        ))}
+      </div>
     </div>
   );
 }
