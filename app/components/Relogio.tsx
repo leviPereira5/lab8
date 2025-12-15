@@ -3,12 +3,18 @@
 import { useEffect, useState } from "react";
 
 export default function Relogio() {
-  const [hora, setHora] = useState(new Date());
+  const [hora, setHora] = useState<Date | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setHora(new Date()), 1000);
-    return () => clearInterval(timer); // limpa o intervalo ao desmontar
+    const update = () => setHora(new Date());
+
+    update(); // define a hora só no cliente
+    const timer = setInterval(update, 1000);
+
+    return () => clearInterval(timer);
   }, []);
+
+  if (!hora) return null; // evita render no SSR
 
   const formatar = (num: number) => String(num).padStart(2, "0");
 
