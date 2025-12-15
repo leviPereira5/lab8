@@ -12,9 +12,6 @@ interface CartItem {
 }
 
 export default function ProdutosPage() {
-  // =======================
-  // FETCH PRODUTOS
-  // =======================
   const fetcher = async (url: string) => {
     const resposta = await fetch(url);
     if (!resposta.ok) {
@@ -26,37 +23,23 @@ export default function ProdutosPage() {
   const url = "https://deisishop.pythonanywhere.com/products/";
   const { data, error, isLoading } = useSWR<Product[]>(url, fetcher);
 
-  // =======================
-  // ESTADOS
-  // =======================
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isStudent, setIsStudent] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [buyResponse, setBuyResponse] = useState<any>(null);
 
-  // =======================
-  // LOCAL STORAGE
-  // =======================
   useEffect(() => {
     const stored = localStorage.getItem("cart");
-    if (stored) {
-      setCart(JSON.parse(stored));
-    }
+    if (stored) setCart(JSON.parse(stored));
   }, []);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // =======================
-  // CARRINHO
-  // =======================
   const addToCart = (produto: Product) => {
     setCart((prev) => {
-      const existente = prev.find(
-        (item) => item.produto.id === produto.id
-      );
-
+      const existente = prev.find((item) => item.produto.id === produto.id);
       if (existente) {
         return prev.map((item) =>
           item.produto.id === produto.id
@@ -64,29 +47,20 @@ export default function ProdutosPage() {
             : item
         );
       }
-
       return [...prev, { produto, quantity: 1 }];
     });
   };
 
   const removeFromCart = (id: number) => {
-    setCart((prev) =>
-      prev.filter((item) => item.produto.id !== id)
-    );
+    setCart((prev) => prev.filter((item) => item.produto.id !== id));
   };
 
-  // =======================
-  // TOTAL
-  // =======================
   const total = cart.reduce(
-    (sum, item) =>
-      sum + Number(item.produto.price) * item.quantity,
+    (sum, item) => sum + Number(item.produto.price) * item.quantity,
     0
   );
 
-  // =======================
-  // COMPRAR
-  // =======================
+
   const buy = () => {
     const productIds = cart.flatMap((item) =>
       Array(item.quantity).fill(item.produto.id)
@@ -102,39 +76,42 @@ export default function ProdutosPage() {
         coupon: coupon,
       }),
     })
-      .then((response) => {
-        if (!response.ok) throw new Error(response.statusText);
-        return response.json();
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Erro ${response.status}`);
+        }
+
+        const text = await response.text();
+
+        return text
+          ? JSON.parse(text)
+          : { message: "Compra realizada com sucesso!" };
       })
       .then((data) => {
         setBuyResponse(data);
         setCart([]);
       })
-      .catch(() => console.log("erro ao comprar"));
+      .catch((err) => {
+        console.error("Erro ao comprar:", err);
+        setBuyResponse({ error: "Erro ao realizar a compra" });
+      });
   };
 
-  // =======================
-  // RENDER
-  // =======================
-  if (error) return <p>{error.message}</p>;
-  if (isLoading) return <p>A descarregar dados…</p>;
-  if (!data) return <p>Não há produtos</p>;
+  if (error) return <p className="text-black">{error.message}</p>;
+  if (isLoading) return <p className="text-black">A descarregar dados…</p>;
+  if (!data) return <p className="text-black">Não há produtos</p>;
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-10">
-      {/* PRODUTOS */}
+    <div className="max-w-7xl mx-auto p-6 space-y-10 text-black">
       <section>
         <h2 className="text-2xl font-bold mb-6">Produtos</h2>
         <FiltrarProdutos data={data} addToCart={addToCart} />
       </section>
 
-      {/* CARRINHO */}
       <section>
         <h2 className="text-2xl font-bold mb-4">Carrinho</h2>
 
-        {cart.length === 0 && (
-          <p className="text-gray-500">Carrinho vazio</p>
-        )}
+        {cart.length === 0 && <p>Carrinho vazio</p>}
 
         <div className="space-y-4">
           {cart.map((item) => (
@@ -150,9 +127,7 @@ export default function ProdutosPage() {
                 />
               </div>
 
-              <p className="font-medium">
-                Quantidade: {item.quantity}
-              </p>
+              <p className="font-medium">Quantidade: {item.quantity}</p>
             </div>
           ))}
         </div>
@@ -162,7 +137,6 @@ export default function ProdutosPage() {
         </h3>
       </section>
 
-      {/* CHECKOUT */}
       <section className="border rounded-xl p-6 space-y-4 bg-gray-50">
         <h2 className="text-2xl font-bold">Finalizar Compra</h2>
 
@@ -180,7 +154,7 @@ export default function ProdutosPage() {
           placeholder="Cupão de desconto"
           value={coupon}
           onChange={(e) => setCoupon(e.target.value)}
-          className="border rounded px-3 py-2 w-full sm:w-64"
+          className="border rounded px-3 py-2 w-full sm:w-64 text-black"
         />
 
         <button
@@ -192,12 +166,9 @@ export default function ProdutosPage() {
         </button>
       </section>
 
-      {/* RESPOSTA */}
       {buyResponse && (
         <section className="border rounded-xl p-6 bg-white">
-          <h3 className="text-xl font-bold mb-4">
-            Resultado da Compra
-          </h3>
+          <h3 className="text-xl font-bold mb-4">Resultado da Compra</h3>
           <pre className="bg-gray-100 p-4 rounded overflow-x-auto">
             {JSON.stringify(buyResponse, null, 2)}
           </pre>

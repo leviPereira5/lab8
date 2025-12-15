@@ -11,49 +11,41 @@ export default function ProdutoDetalhe({ produto }: ProdutoDetalheProps) {
   const router = useRouter();
 
   return (
-    <>
-      {/* BOTÃO VOLTAR */}
-    <button
-  onClick={() => router.push("/produtos")}
-  className="inline-flex items-center gap-2 mb-6 
-             bg-black hover:bg-gray-200 
-             text-blue-600 hover:text-blue-800 
-             px-4 py-2 rounded shadow transition"
->
-  ⬅ Voltar à lista
-</button>
+    <div className="text-black max-w-3xl mx-auto p-6 space-y-6">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* IMAGEM */}
-        <div className="flex justify-center items-center bg-white rounded shadow p-4">
-          <img
-            src={`https://deisishop.pythonanywhere.com${produto.image}`}
-            alt={produto.title}
-            className="max-h-96 object-contain"
-          />
-        </div>
 
-        {/* INFO */}
-        <div className="bg-white rounded shadow p-6">
-          <h1 className="text-2xl font-bold mb-4">{produto.title}</h1>
+      <button
+        onClick={() => router.push("/produtos")}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition shadow-sm font-medium"
+      >
+        ⬅ Voltar à lista
+      </button>
 
-          <p className="text-gray-700 mb-4">
-            <strong>Descrição:</strong> {produto.description}
-          </p>
 
-          <p className="mb-2">
-            <strong>Categoria:</strong> {produto.category}
-          </p>
-
-          <p className="mb-2 text-lg font-semibold">
-            Preço: {produto.price} €
-          </p>
-
-          <p className="text-yellow-600">
-            {produto.rating.rate} ({produto.rating.count} avaliações)
-          </p>
-        </div>
+      <div className="flex justify-center">
+        <img
+          src={`https://deisishop.pythonanywhere.com${produto.image}`}
+          alt={produto.title}
+          className="max-h-96 object-contain rounded shadow"
+        />
       </div>
-    </>
+
+
+      <h1 className="text-2xl font-bold text-center">{produto.title}</h1>
+
+
+      <p className="text-center text-gray-800">{produto.description}</p>
+
+
+      <div className="flex justify-center gap-4 text-center">
+        <span className="font-medium">Categoria: {produto.category}</span>
+        <span className="font-semibold text-green-600">Preço: {produto.price} €</span>
+      </div>
+
+
+      <p className="text-yellow-600 text-center">
+        {produto.rating.rate} ({produto.rating.count} avaliações)
+      </p>
+    </div>
   );
 }

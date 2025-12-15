@@ -44,7 +44,7 @@ export default function FiltrarProdutos({
 
   return (
     <div className="space-y-6">
-      {/* PESQUISA + ORDENAÇÃO */}
+    
       <div className="flex flex-col sm:flex-row gap-4 items-center">
         <PesquisarProdutos
           pesquisa={pesquisa}
@@ -63,7 +63,7 @@ export default function FiltrarProdutos({
         </select>
       </div>
 
-      {/* GRID DE PRODUTOS */}
+     
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {produtosFiltrados.map((produto) => (
           <ProdutoCard

@@ -17,7 +17,7 @@ export default function ProdutoCard({
   isCart = false,
 }: ProdutoCardProps) {
   return (
-    <div className="border rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col">
+    <div className="border rounded-xl p-4 shadow-sm hover:shadow-md transition flex flex-col text-black">
       <img
         src={`https://deisishop.pythonanywhere.com${produto.image}`}
         alt={produto.title}
@@ -26,7 +26,7 @@ export default function ProdutoCard({
 
       <h3 className="font-semibold text-lg mb-2">{produto.title}</h3>
 
-      <p className="text-gray-700 mb-4">{produto.price} €</p>
+      <p className="mb-4">{produto.price} €</p>
 
       {!isCart ? (
         <div className="mt-auto flex gap-2">

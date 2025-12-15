@@ -18,7 +18,7 @@ export default function ProdutoPage() {
   if (error) return <p>Erro</p>;
 
   return (
-    <div>
+    <div className="text-black space-y-4">
     <img src={data?.image} alt={data?.title} width={250}/>
       <h1>{data?.title}</h1>
       <p>{data?.description}</p>
